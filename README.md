@@ -14,7 +14,17 @@ Supports both **light** and **dark** modes, and includes built-in styling for sw
 
 ## Screenshots
 
-> *(Add screenshots here once installed — see [Contributing](#contributing))*
+### Light Mode
+![Hoover theme — light mode](screenshots/screenshot-light.png)
+
+### Dark Mode
+![Hoover theme — dark mode](screenshots/screenshot-dark.png)
+
+### Treated Wood Products Division
+![Hoover TWP division accent](screenshots/screenshot-twp.png)
+
+### Architectural Solutions Division
+![Hoover HAS division accent](screenshots/screenshot-as.png)
 
 ---
 
