@@ -1,0 +1,878 @@
+/*
+ * Hoover Brand Theme for Obsidian
+ * Based on Hoover Brand Guidelines V2.0
+ *
+ * Color Palette:
+ *   PRIMARY
+ *     Hoover Slate    #283A40
+ *     Hoover Green    #31C576
+ *     Hoover Cream    #F0E9DD
+ *   SECONDARY (Parent Brand)
+ *     Hoover Black    #151F22
+ *     Hoover Dark Green #1E7848
+ *     Hoover Mint     #C8DFCF
+ *     Hoover White    #FFFFFF
+ *   DIVISION SECONDARY
+ *     Hoover Orange   #FF6C13  (Treated Wood Products)
+ *     Hoover Blue     #1BA0F5  (Architectural Solutions)
+ *   TERTIARY
+ *     Hoover Red      #F60000
+ *     Hoover Gold     #FFB200
+ *     Hoover Light Blue #72C9FF
+ *     Hoover Violet   #B565E5
+ *
+ * Typography:
+ *   Headlines: N27 Medium  (fallback: system sans-serif)
+ *   Body Copy: Acumin Pro Light / Regular
+ *   Labels:    Acumin Pro Semibold / Bold
+ *
+ * Subsidiaries:
+ *   Default: Hoover parent brand (Slate + Green + Cream)
+ *   CSS class .hoover-twp → Hoover Treated Wood Products (Orange accent)
+ *   CSS class .hoover-has → Hoover Architectural Solutions (Blue accent)
+ *   Apply via note cssclasses: [hoover-twp] or [hoover-has]
+*/
+
+/* ============================================================
+   @settings — Style Settings plugin support
+   ============================================================ */
+
+/* @settings
+name: Hoover Brand Theme
+id: hoover
+settings:
+    -
+        id: hoover-head-brand
+        title: Brand
+        type: heading
+        level: 2
+        collapsed: true
+    -
+        id: hoover-division
+        title: Active Division
+        description: Select which Hoover division this vault primarily represents. This controls the accent color.
+        type: class-select
+        default: hoover-parent
+        options:
+            -
+                label: Hoover (Parent)
+                value: hoover-parent
+            -
+                label: Hoover Treated Wood Products
+                value: hoover-twp
+            -
+                label: Hoover Architectural Solutions
+                value: hoover-has
+    -
+        id: hoover-head-colours
+        title: Colours
+        type: heading
+        level: 2
+        collapsed: true
+    -
+        id: hoover-green
+        title: Hoover Green
+        type: variable-color
+        opacity: false
+        format: hex
+        default: '#31C576'
+    -
+        id: hoover-slate
+        title: Hoover Slate
+        type: variable-color
+        opacity: false
+        format: hex
+        default: '#283A40'
+    -
+        id: hoover-cream
+        title: Hoover Cream
+        type: variable-color
+        opacity: false
+        format: hex
+        default: '#F0E9DD'
+    -
+        id: hoover-dark-green
+        title: Hoover Dark Green
+        type: variable-color
+        opacity: false
+        format: hex
+        default: '#1E7848'
+    -
+        id: hoover-mint
+        title: Hoover Mint
+        type: variable-color
+        opacity: false
+        format: hex
+        default: '#C8DFCF'
+    -
+        id: hoover-black
+        title: Hoover Black
+        type: variable-color
+        opacity: false
+        format: hex
+        default: '#151F22'
+    -
+        id: hoover-orange
+        title: Hoover Orange (Treated Wood Products)
+        type: variable-color
+        opacity: false
+        format: hex
+        default: '#FF6C13'
+    -
+        id: hoover-blue
+        title: Hoover Blue (Architectural Solutions)
+        type: variable-color
+        opacity: false
+        format: hex
+        default: '#1BA0F5'
+    -
+        id: hoover-head-opts
+        title: Options
+        type: heading
+        level: 2
+        collapsed: true
+    -
+        id: hoover-hdcl
+        title: Colored headers
+        description: Color H1–H6 using the Hoover palette
+        type: class-toggle
+        default: true
+    -
+        id: hoover-hi-line
+        title: Highlight active line
+        type: class-toggle
+        default: false
+    -
+        id: hoover-boxed-tags
+        title: Box tags
+        description: Give tags a solid bordered pill style
+        type: class-toggle
+        default: true
+    -
+        id: hoover-rm-status
+        title: Hide status bar
+        type: class-toggle
+        default: false
+    -
+        id: hide-properties
+        title: Hide properties in reading mode
+        type: class-toggle
+        default: true
+*/
+
+/* ============================================================
+   Brand token layer — shared across both modes
+   ============================================================ */
+
+.theme-light,
+.theme-dark {
+    /* Primary palette */
+    --hoover-green:       #31C576;
+    --hoover-slate:       #283A40;
+    --hoover-cream:       #F0E9DD;
+
+    /* Secondary palette */
+    --hoover-black:       #151F22;
+    --hoover-dark-green:  #1E7848;
+    --hoover-mint:        #C8DFCF;
+    --hoover-white:       #FFFFFF;
+
+    /* Division secondary — Treated Wood Products */
+    --hoover-orange:      #FF6C13;
+
+    /* Division secondary — Architectural Solutions */
+    --hoover-blue:        #1BA0F5;
+
+    /* Tertiary */
+    --hoover-red:         #F60000;
+    --hoover-gold:        #FFB200;
+    --hoover-light-blue:  #72C9FF;
+    --hoover-violet:      #B565E5;
+
+    /* RGB versions for opacity use */
+    --hoover-green-rgb:      49, 197, 118;
+    --hoover-slate-rgb:      40, 58, 64;
+    --hoover-cream-rgb:      240, 233, 221;
+    --hoover-orange-rgb:     255, 108, 19;
+    --hoover-blue-rgb:       27, 160, 245;
+
+    /* Default accent = Hoover Green (parent brand) */
+    --hoover-accent:         var(--hoover-green);
+    --hoover-accent-rgb:     var(--hoover-green-rgb);
+    --hoover-accent-dark:    var(--hoover-dark-green);
+
+    /* Typography scale  */
+    --hoover-font-headline:  "N27", "Acumin Pro", ui-sans-serif, system-ui, sans-serif;
+    --hoover-font-body:      "Acumin Pro", ui-sans-serif, system-ui, sans-serif;
+
+    --text-highlight-bg:       rgba(49, 197, 118, 0.25);
+    --text-highlight-bg-active: rgba(49, 197, 118, 0.35);
+    --text-error: var(--hoover-red);
+}
+
+/* ============================================================
+   Division overrides — apply via note cssclasses or vault class
+   ============================================================ */
+
+/* Hoover Treated Wood Products — Orange accent */
+.hoover-twp,
+.hoover-twp .workspace {
+    --hoover-accent:      var(--hoover-orange);
+    --hoover-accent-rgb:  var(--hoover-orange-rgb);
+    --hoover-accent-dark: #cc5510;
+}
+
+/* Hoover Architectural Solutions — Blue accent */
+.hoover-has,
+.hoover-has .workspace {
+    --hoover-accent:      var(--hoover-blue);
+    --hoover-accent-rgb:  var(--hoover-blue-rgb);
+    --hoover-accent-dark: #1480c5;
+}
+
+/* ============================================================
+   LIGHT MODE
+   Cream background, Slate text — matches the document-style
+   pages in the brand guidelines (cream/off-white with slate copy)
+   ============================================================ */
+
+.theme-light {
+    /* Obsidian accent wired to Hoover accent */
+    --accent-h: 147;
+    --accent-s: 60%;
+    --accent-l: 48%;
+
+    /* Backgrounds */
+    --background-primary:           var(--hoover-cream);           /* note area */
+    --background-primary-alt:       #e8e0d2;                       /* code blocks */
+    --background-secondary:         #e4dbd0;                       /* sidebar */
+    --background-secondary-alt:     #ddd4c9;                       /* active sidebar */
+    --background-modifier-border:   #cdc4b6;                       /* dividers */
+    --background-modifier-hover:    rgba(var(--hoover-slate-rgb), 0.07);
+    --background-modifier-active-hover: rgba(var(--hoover-accent-rgb), 0.12);
+
+    /* Text */
+    --text-normal:   var(--hoover-slate);
+    --text-muted:    #5a7078;
+    --text-faint:    #8ea5ad;
+    --text-on-accent: var(--hoover-white);
+
+    /* Color base scale (Obsidian uses these for chrome) */
+    --color-base-00:  #ddd4c9;
+    --color-base-05:  #e4dbd0;
+    --color-base-10:  #e8e0d2;
+    --color-base-20:  #cdc4b6;
+    --color-base-25:  #b8afa1;
+    --color-base-30:  #cdc4b6;
+    --color-base-35:  #b8afa1;
+    --color-base-40:  #e8e0d2;
+    --color-base-50:  #5a7078;
+    --color-base-60:  #3d5560;
+    --color-base-70:  var(--hoover-slate);
+    --color-base-100: var(--hoover-slate);
+
+    /* Links */
+    --link-color:          var(--hoover-dark-green);
+    --link-color-hover:    var(--hoover-green);
+    --link-external-color: var(--hoover-dark-green);
+    --link-unresolved-color: rgba(var(--hoover-slate-rgb), 0.45);
+
+    /* Code */
+    --code-background: #e0d8ca;
+    --code-normal:     var(--hoover-slate);
+    --code-comment:    #8ea5ad;
+    --code-tag:        var(--hoover-dark-green);
+    --code-keyword:    var(--hoover-dark-green);
+    --code-string:     var(--hoover-orange);
+    --code-function:   var(--hoover-slate);
+    --code-property:   var(--hoover-accent);
+
+    /* Scrollbar */
+    --scrollbar-thumb-bg:       rgba(var(--hoover-slate-rgb), 0.2);
+    --scrollbar-active-thumb-bg: rgba(var(--hoover-slate-rgb), 0.35);
+}
+
+/* ============================================================
+   DARK MODE
+   Slate background, Cream text — mirrors the dark-background
+   slides from the brand guidelines
+   ============================================================ */
+
+.theme-dark {
+    /* Obsidian accent wired to Hoover accent */
+    --accent-h: 147;
+    --accent-s: 60%;
+    --accent-l: 48%;
+
+    /* Backgrounds */
+    --background-primary:           var(--hoover-slate);           /* note area */
+    --background-primary-alt:       var(--hoover-black);           /* code blocks */
+    --background-secondary:         var(--hoover-black);           /* sidebar */
+    --background-secondary-alt:     #0f181b;                       /* active sidebar */
+    --background-modifier-border:   #3a5560;
+    --background-modifier-hover:    rgba(var(--hoover-green-rgb), 0.08);
+    --background-modifier-active-hover: rgba(var(--hoover-accent-rgb), 0.15);
+
+    /* Text */
+    --text-normal:   var(--hoover-cream);
+    --text-muted:    var(--hoover-mint);
+    --text-faint:    #6e9098;
+    --text-on-accent: var(--hoover-white);
+
+    /* Color base scale */
+    --color-base-00:  var(--hoover-black);
+    --color-base-05:  var(--hoover-black);
+    --color-base-10:  var(--hoover-black);
+    --color-base-20:  var(--hoover-black);
+    --color-base-25:  var(--hoover-black);
+    --color-base-30:  var(--hoover-slate);
+    --color-base-35:  #3a5560;
+    --color-base-40:  var(--hoover-black);
+    --color-base-50:  var(--hoover-mint);
+    --color-base-60:  #d0c8bb;
+    --color-base-70:  #e0d9ce;
+    --color-base-100: var(--hoover-cream);
+
+    /* Links */
+    --link-color:          var(--hoover-green);
+    --link-color-hover:    var(--hoover-mint);
+    --link-external-color: var(--hoover-green);
+    --link-unresolved-color: rgba(200, 223, 207, 0.4); /* mint at 40% */
+
+    /* Code */
+    --code-background: #1c2e35;
+    --code-normal:     var(--hoover-cream);
+    --code-comment:    #6e9098;
+    --code-tag:        var(--hoover-green);
+    --code-keyword:    var(--hoover-green);
+    --code-string:     var(--hoover-orange);
+    --code-function:   var(--hoover-mint);
+    --code-property:   var(--hoover-accent);
+
+    /* Scrollbar */
+    --scrollbar-thumb-bg:        rgba(var(--hoover-cream-rgb), 0.15);
+    --scrollbar-active-thumb-bg: rgba(var(--hoover-cream-rgb), 0.3);
+}
+
+/* ============================================================
+   Global body / typography
+   ============================================================ */
+
+body {
+    /* Font families — N27 for headlines, Acumin Pro for body */
+    --font-interface:     var(--hoover-font-body);
+    --font-text:          var(--hoover-font-body);
+    --font-monospace:     "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+
+    /* Scale */
+    --font-ui-smaller: 11px;
+    --font-ui-small:   12px;
+    --font-ui-medium:  13px;
+    --font-ui-large:   14px;
+
+    --h1-size: 2em;
+    --h2-size: 1.6em;
+    --h3-size: 1.37em;
+    --h4-size: 1.2em;
+    --h5-size: 1.05em;
+    --h6-size: 1em;
+
+    /* Heading font override to N27 */
+    --h1-font: var(--hoover-font-headline);
+    --h2-font: var(--hoover-font-headline);
+    --h3-font: var(--hoover-font-headline);
+    --h4-font: var(--hoover-font-headline);
+    --h5-font: var(--hoover-font-headline);
+    --h6-font: var(--hoover-font-headline);
+
+    --h1-weight: 500;
+    --h2-weight: 500;
+    --h3-weight: 500;
+    --h4-weight: 500;
+    --h5-weight: 600;
+    --h6-weight: 700;
+
+    --heading-spacing: 0;
+    --p-spacing: 0.6rem;
+    --file-margins: 24px;
+    --line-height-normal: 1.65;
+    --bold-weight: 700;
+
+    /* Rounded radius tokens — clean, professional */
+    --radius-s: 3px;
+    --radius-m: 5px;
+    --radius-l: 8px;
+}
+
+.markdown-rendered {
+    --heading-spacing: calc(var(--p-spacing) * 2.2);
+}
+
+hr {
+    margin: 1.5em 0;
+    border-color: var(--background-modifier-border);
+}
+
+/* ============================================================
+   Accent color passthrough — wire Obsidian's --color-accent
+   to our --hoover-accent token
+   ============================================================ */
+
+.theme-light,
+.theme-dark {
+    --color-accent: var(--hoover-accent);
+    --color-accent-1: var(--hoover-accent);
+    --color-accent-2: var(--hoover-accent);
+    --interactive-accent: var(--hoover-accent);
+    --interactive-accent-hover: var(--hoover-accent-dark);
+}
+
+/* ============================================================
+   Header colors (toggled by .hoover-hdcl class)
+   H1 → Hoover Slate/Cream  H2 → Hoover Green
+   H3 → Dark Green           H4 → Orange (accent)
+   H5 → Mint                 H6 → Muted
+   ============================================================ */
+
+.hoover-hdcl {
+    --h1-color: var(--text-normal);
+    --h2-color: var(--hoover-accent);
+    --h3-color: var(--hoover-dark-green);
+    --h4-color: var(--hoover-accent);
+    --h5-color: var(--text-muted);
+    --h6-color: var(--text-faint);
+}
+
+/* Default heading colors (without toggle) */
+.theme-light .markdown-rendered h1,
+.theme-light .cm-header-1 { color: var(--hoover-slate); }
+.theme-dark  .markdown-rendered h1,
+.theme-dark  .cm-header-1 { color: var(--hoover-cream); }
+
+.markdown-rendered h2, .cm-header-2 { color: var(--hoover-accent); }
+.markdown-rendered h3, .cm-header-3 { color: var(--hoover-dark-green); }
+
+/* H1 uses the headline font extra-bold */
+.markdown-rendered h1 { font-weight: 700; letter-spacing: -0.01em; }
+.markdown-rendered h2 { font-weight: 500; letter-spacing: -0.01em; }
+
+/* ============================================================
+   Sidebar / file explorer
+   ============================================================ */
+
+.nav-file-title.is-active,
+.nav-folder-title.is-active {
+    background-color: rgba(var(--hoover-accent-rgb), 0.15);
+    color: var(--hoover-accent);
+    font-weight: 600;
+}
+
+.nav-file-title:hover,
+.nav-folder-title:hover {
+    background-color: rgba(var(--hoover-accent-rgb), 0.08);
+}
+
+.nav-folder-title-content {
+    font-weight: 600;
+    font-size: var(--font-ui-small);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+/* ============================================================
+   Tabs
+   ============================================================ */
+
+.workspace-tab-header.is-active {
+    border-bottom: 2px solid var(--hoover-accent);
+    color: var(--text-normal);
+}
+
+.workspace-tab-header:hover {
+    color: var(--hoover-accent);
+}
+
+/* ============================================================
+   Search / Quick Switcher highlights
+   ============================================================ */
+
+.suggestion-item.is-selected {
+    background-color: rgba(var(--hoover-accent-rgb), 0.15);
+}
+
+.search-result-file-match {
+    background-color: rgba(var(--hoover-accent-rgb), 0.12);
+    border-radius: var(--radius-s);
+}
+
+/* ============================================================
+   Checkboxes
+   ============================================================ */
+
+.task-list-item-checkbox:checked {
+    background-color: var(--hoover-accent);
+    border-color: var(--hoover-accent);
+}
+
+/* ============================================================
+   Tags
+   ============================================================ */
+
+.tag {
+    background-color: rgba(var(--hoover-accent-rgb), 0.12);
+    border-color: rgba(var(--hoover-accent-rgb), 0.4);
+    color: var(--hoover-accent);
+    border-radius: var(--radius-s);
+    font-size: 0.8em;
+    font-weight: 600;
+    font-family: var(--hoover-font-body);
+    padding: 1px 7px;
+}
+
+.tag:hover {
+    background-color: rgba(var(--hoover-accent-rgb), 0.25);
+    color: var(--hoover-accent-dark);
+}
+
+/* Boxed tag style (hoover-boxed-tags) */
+.hoover-boxed-tags .tag {
+    border-width: 1.5px;
+    border-style: solid;
+}
+
+/* Division-specific tag tints */
+.hoover-twp .tag {
+    background-color: rgba(var(--hoover-orange-rgb), 0.12);
+    border-color: rgba(var(--hoover-orange-rgb), 0.45);
+    color: var(--hoover-orange);
+}
+
+.hoover-has .tag {
+    background-color: rgba(var(--hoover-blue-rgb), 0.12);
+    border-color: rgba(var(--hoover-blue-rgb), 0.45);
+    color: var(--hoover-blue);
+}
+
+/* ============================================================
+   Callouts — styled with Hoover brand colors
+   ============================================================ */
+
+.callout {
+    border-left-width: 3px;
+    border-radius: var(--radius-m);
+}
+
+.callout[data-callout="note"],
+.callout[data-callout="info"] {
+    --callout-color: var(--hoover-green-rgb);
+    --callout-icon: lucide-info;
+}
+
+.callout[data-callout="tip"],
+.callout[data-callout="hint"] {
+    --callout-color: 30, 120, 72;  /* dark green */
+    --callout-icon: lucide-flame;
+}
+
+.callout[data-callout="warning"],
+.callout[data-callout="caution"] {
+    --callout-color: var(--hoover-orange-rgb);
+    --callout-icon: lucide-alert-triangle;
+}
+
+.callout[data-callout="danger"],
+.callout[data-callout="error"] {
+    --callout-color: 246, 0, 0; /* hoover red */
+    --callout-icon: lucide-zap;
+}
+
+.callout[data-callout="twp"] {
+    --callout-color: var(--hoover-orange-rgb);
+    --callout-icon: lucide-tree-pine;
+}
+
+.callout[data-callout="has"] {
+    --callout-color: var(--hoover-blue-rgb);
+    --callout-icon: lucide-building-2;
+}
+
+/* ============================================================
+   Tables
+   ============================================================ */
+
+.markdown-rendered table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.markdown-rendered th {
+    background-color: var(--hoover-accent);
+    color: var(--hoover-white);
+    font-family: var(--hoover-font-headline);
+    font-weight: 500;
+    font-size: 0.85em;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border: none;
+}
+
+.markdown-rendered td {
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--background-modifier-border);
+    font-size: 0.9em;
+}
+
+.markdown-rendered tr:hover td {
+    background-color: rgba(var(--hoover-accent-rgb), 0.06);
+}
+
+/* ============================================================
+   Code blocks
+   ============================================================ */
+
+.markdown-rendered code,
+.cm-inline-code {
+    background-color: var(--code-background);
+    color: var(--code-normal);
+    border-radius: var(--radius-s);
+    padding: 1px 5px;
+    font-size: 0.9em;
+}
+
+pre > code {
+    background: transparent;
+    padding: 0;
+}
+
+.markdown-rendered pre {
+    border-left: 3px solid var(--hoover-accent);
+    border-radius: var(--radius-m);
+    background-color: var(--code-background);
+}
+
+/* ============================================================
+   Blockquotes — accent left bar
+   ============================================================ */
+
+.markdown-rendered blockquote {
+    border-left: 4px solid var(--hoover-accent);
+    background-color: rgba(var(--hoover-accent-rgb), 0.06);
+    border-radius: 0 var(--radius-m) var(--radius-m) 0;
+    padding: 0.5em 1em;
+    margin: 1em 0;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+/* ============================================================
+   Horizontal rule — styled as a Hoover "stripe" element
+   ============================================================ */
+
+hr {
+    height: 3px;
+    background: linear-gradient(
+        90deg,
+        var(--hoover-accent) 0%,
+        var(--hoover-accent) 60%,
+        var(--background-modifier-border) 60%,
+        var(--background-modifier-border) 100%
+    );
+    border: none;
+    border-radius: 2px;
+}
+
+/* ============================================================
+   Highlight (==text==)
+   ============================================================ */
+
+.markdown-rendered mark {
+    background-color: rgba(var(--hoover-accent-rgb), 0.28);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 2px;
+}
+
+/* ============================================================
+   Active line highlight (hoover-hi-line)
+   ============================================================ */
+
+.hoover-hi-line .cm-active.cm-line {
+    background-color: rgba(var(--hoover-accent-rgb), 0.06);
+}
+
+/* ============================================================
+   Status bar (hoover-rm-status)
+   ============================================================ */
+
+.hoover-rm-status .status-bar {
+    display: none;
+}
+
+/* ============================================================
+   Properties (hide-properties)
+   ============================================================ */
+
+.hide-properties .markdown-rendered .metadata-container {
+    display: none;
+}
+
+/* ============================================================
+   Ribbon / toolbar accent
+   ============================================================ */
+
+.side-dock-ribbon {
+    border-right: 2px solid var(--background-modifier-border);
+}
+
+.side-dock-ribbon-action:hover,
+.side-dock-ribbon-action.is-active {
+    color: var(--hoover-accent);
+}
+
+/* ============================================================
+   Prompt / modal
+   ============================================================ */
+
+.prompt {
+    border-top: 3px solid var(--hoover-accent);
+    border-radius: var(--radius-l);
+}
+
+.prompt-input {
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.prompt-instruction-command {
+    color: var(--hoover-accent);
+    font-weight: 600;
+}
+
+/* ============================================================
+   Graph view
+   ============================================================ */
+
+.graph-view.color-fill {
+    color: var(--hoover-accent);
+}
+
+.graph-view.color-fill-focused {
+    color: var(--hoover-dark-green);
+}
+
+.graph-view.color-arrow {
+    color: rgba(var(--hoover-accent-rgb), 0.4);
+}
+
+/* ============================================================
+   Scrollbars
+   ============================================================ */
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-bg);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-active-thumb-bg);
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ============================================================
+   Division banner callouts
+   Use these in notes to mark a section as belonging to a
+   specific Hoover division:
+     > [!twp]  → Treated Wood Products note
+     > [!has]  → Architectural Solutions note
+   ============================================================ */
+
+/* TWP badge styling */
+.callout[data-callout="twp"] .callout-title {
+    font-family: var(--hoover-font-headline);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-size: 0.8em;
+}
+
+.callout[data-callout="twp"] .callout-title::after {
+    content: " — Treated Wood Products";
+    font-size: 0.85em;
+    opacity: 0.7;
+    font-family: var(--hoover-font-body);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+/* HAS badge styling */
+.callout[data-callout="has"] .callout-title {
+    font-family: var(--hoover-font-headline);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-size: 0.8em;
+}
+
+.callout[data-callout="has"] .callout-title::after {
+    content: " — Architectural Solutions";
+    font-size: 0.85em;
+    opacity: 0.7;
+    font-family: var(--hoover-font-body);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+/* ============================================================
+   Division-scoped note styling
+   When cssclasses: [hoover-twp] is set on a note, the entire
+   note will be scented in the division color scheme.
+   ============================================================ */
+
+/* Treated Wood Products — orange left border on note */
+.hoover-twp .markdown-preview-view,
+.hoover-twp .cm-editor {
+    border-left: 4px solid var(--hoover-orange);
+    padding-left: 12px;
+}
+
+.hoover-twp .markdown-rendered h2,
+.hoover-twp .cm-header-2 {
+    color: var(--hoover-orange);
+}
+
+/* Architectural Solutions — blue left border on note */
+.hoover-has .markdown-preview-view,
+.hoover-has .cm-editor {
+    border-left: 4px solid var(--hoover-blue);
+    padding-left: 12px;
+}
+
+.hoover-has .markdown-rendered h2,
+.hoover-has .cm-header-2 {
+    color: var(--hoover-blue);
+}
+
+/* ============================================================
+   Print / PDF export fixes
+   ============================================================ */
+
+@media print {
+    .theme-dark {
+        --background-primary:   var(--hoover-cream);
+        --text-normal:          var(--hoover-slate);
+        --text-muted:           #5a7078;
+        --background-modifier-border: #cdc4b6;
+        --code-background:      #e0d8ca;
+        --code-normal:          var(--hoover-slate);
+    }
+}
