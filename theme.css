@@ -195,6 +195,7 @@ settings:
     --hoover-cream-rgb:      240, 233, 221;
     --hoover-orange-rgb:     255, 108, 19;
     --hoover-blue-rgb:       27, 160, 245;
+    --hoover-violet-rgb:     181, 101, 229;
 
     /* Default accent = Hoover Green (parent brand) */
     --hoover-accent:         var(--hoover-green);
@@ -596,6 +597,11 @@ hr {
     --callout-icon: lucide-building-2;
 }
 
+.callout[data-callout="personal"] {
+    --callout-color: var(--hoover-violet-rgb);
+    --callout-icon: lucide-user;
+}
+
 /* ============================================================
    Tables
    ============================================================ */
@@ -830,6 +836,39 @@ hr {
     font-weight: 400;
     text-transform: none;
     letter-spacing: 0;
+}
+
+/* Personal badge styling
+   Use > [!personal] to mark a note section as non-work context.
+   Violet is drawn from the Hoover tertiary palette — present in
+   the brand system but unused by any division, making it a
+   clean visual separator without clashing. */
+
+.callout[data-callout="personal"] .callout-title {
+    font-family: var(--hoover-font-body);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    font-size: 0.85em;
+    font-style: italic;
+}
+
+.callout[data-callout="personal"] .callout-title::after {
+    content: " — Personal";
+    font-size: 0.85em;
+    opacity: 0.6;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Softer background than the division callouts — less corporate,
+   more ambient. The border stays violet but the fill is very light
+   so it reads as a gentle aside rather than a work item. */
+.theme-light .callout[data-callout="personal"] {
+    background-color: rgba(var(--hoover-violet-rgb), 0.07);
+}
+
+.theme-dark .callout[data-callout="personal"] {
+    background-color: rgba(var(--hoover-violet-rgb), 0.1);
 }
 
 /* ============================================================
