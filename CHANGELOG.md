@@ -7,6 +7,31 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.1.2] — 2026-04-29
+
+### Fixed
+- Wide tables now fit within the printed page rather than running off
+  the right margin. Tables are constrained to 100% page width on print
+  and use auto layout so columns are sized proportionally to content.
+- Long cell content (URLs, SKUs, product codes) now wraps inside cells
+  instead of forcing a column to push beyond the page edge.
+- Table rows no longer break across pages — a row either prints in full
+  on one page or moves entirely to the next.
+- Print page margins set to a sensible 0.5 inches on letter paper,
+  giving the maximum usable area without looking cramped.
+
+### Added
+- New `wide-table` cssclass for genuinely wide tables (competitive
+  comparison matrices, full approval grids, vendor scoring sheets).
+  Add `cssclasses: [wide-table]` to a note's frontmatter and the note
+  prints in landscape orientation with tighter cell padding so all
+  columns remain visible at a readable size.
+- Print font size for tables is now explicitly set (10pt body, 9pt
+  header) so tables print consistently regardless of which note they
+  appear in.
+
+---
+
 ## [1.1.1] — 2026-04-29
 
 ### Fixed

@@ -990,4 +990,110 @@ hr {
         color: var(--hoover-dark-green) !important;
         text-decoration: underline !important;
     }
+
+    /* ========================================================
+       Wide table handling
+
+       The default behavior on print is "render table at its
+       natural width and clip whatever falls past the right
+       margin." That's why columns G, H, I get cut off.
+
+       Layered fix below — each layer addresses a different
+       width situation so every table in your vault prints
+       legibly without needing manual intervention.
+       ======================================================== */
+
+    /* 1. Set up sensible page geometry. 0.5in margins give the
+       widest usable area without looking cramped. */
+    @page {
+        size: letter;
+        margin: 0.5in;
+    }
+
+    /* 2. Constrain every table to the page width and rely on the
+       browser's table layout to size columns proportionally to
+       their content. This is the single most important rule —
+       it tells the engine "you must fit, figure it out." */
+    .markdown-rendered table,
+    .markdown-preview-view table {
+        width: 100% !important;
+        max-width: 100% !important;
+        table-layout: auto !important;
+        font-size: 10pt !important;
+    }
+
+    /* 3. Allow text inside cells to wrap onto multiple lines.
+       Without this, a long unbroken cell (a URL, a SKU, a
+       product code) will force the column wider than the page. */
+    .markdown-rendered table td,
+    .markdown-rendered table th,
+    .markdown-preview-view table td,
+    .markdown-preview-view table th {
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+        padding: 4px 6px !important;
+    }
+
+    /* 4. Tighten font sizing for tables specifically.
+       Body text stays at the document size; only tables shrink,
+       and only on print. This is the right compromise — the user
+       gets readable prose at full size, with tables sized just
+       enough to fit the page. */
+    .markdown-rendered table th,
+    .markdown-preview-view table th {
+        font-size: 9pt !important;
+        letter-spacing: 0.02em !important;
+    }
+
+    /* 5. Don't break a row across two pages — it always looks
+       broken. Headers should also stay with their content. */
+    .markdown-rendered table tr,
+    .markdown-preview-view table tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .markdown-rendered table thead,
+    .markdown-preview-view table thead {
+        display: table-header-group !important;
+    }
+
+    /* 6. Explicit opt-in: any table inside a note tagged with
+       cssclasses: [wide-table] gets even tighter spacing AND
+       prints in landscape orientation. Use this for the genuinely
+       wide tables — competitive comparison matrices, full
+       approval grids, vendor scoring sheets, etc.
+
+       Frontmatter:
+         cssclasses:
+           - wide-table
+
+       The @page rule below switches that specific note to
+       landscape. Most browsers honor this; some PDF engines
+       require manual landscape selection in the print dialog. */
+    .wide-table .markdown-rendered table,
+    .wide-table .markdown-preview-view table {
+        font-size: 8.5pt !important;
+    }
+
+    .wide-table .markdown-rendered table th,
+    .wide-table .markdown-preview-view table th {
+        font-size: 8pt !important;
+        padding: 3px 4px !important;
+    }
+
+    .wide-table .markdown-rendered table td,
+    .wide-table .markdown-preview-view table td {
+        padding: 3px 4px !important;
+    }
+
+    @page wide-table {
+        size: letter landscape;
+        margin: 0.4in;
+    }
+
+    .wide-table {
+        page: wide-table;
+    }
 }
