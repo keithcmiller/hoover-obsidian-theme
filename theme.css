@@ -903,9 +903,30 @@ hr {
 
 /* ============================================================
    Print / PDF export fixes
+
+   Two issues this section solves:
+
+   1. Most browsers strip background colors when printing to save
+      ink. Without that background, white text on the table header
+      becomes white-on-white and disappears entirely. The fix is
+      twofold: force background printing on, AND swap to a print-
+      safe color combination as a second line of defense.
+
+   2. Dark mode export is unreadable on paper. We force light-mode
+      colors regardless of which theme is active.
    ============================================================ */
 
 @media print {
+    /* Force browsers to honor background colors on print.
+       Most browsers respect this; Safari and some PDF engines
+       don't, which is why the color overrides below also exist. */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* Dark mode → forced light for print legibility */
     .theme-dark {
         --background-primary:   var(--hoover-cream);
         --text-normal:          var(--hoover-slate);
@@ -913,5 +934,60 @@ hr {
         --background-modifier-border: #cdc4b6;
         --code-background:      #e0d8ca;
         --code-normal:          var(--hoover-slate);
+    }
+
+    /* Print-safe table headers
+       Belt and suspenders. If the printer respects backgrounds,
+       the green fill renders and the white text reads. If the
+       printer strips backgrounds, the dark text below takes over
+       so the column names always remain visible.
+
+       We use a light tinted background that prints cleanly on
+       both color and black-and-white printers, with dark slate
+       text that reads on either. */
+    .markdown-rendered th,
+    .markdown-preview-view th,
+    table th {
+        background-color: var(--hoover-cream) !important;
+        color: var(--hoover-slate) !important;
+        border: 1px solid var(--hoover-slate) !important;
+        border-bottom: 2px solid var(--hoover-accent) !important;
+        font-weight: 700 !important;
+    }
+
+    .markdown-rendered td,
+    .markdown-preview-view td,
+    table td {
+        color: var(--hoover-slate) !important;
+        border: 1px solid #b8afa1 !important;
+    }
+
+    /* Division-scoped notes — override the colored left border so
+       it doesn't waste ink on the print margin */
+    .hoover-twp .markdown-preview-view,
+    .hoover-has .markdown-preview-view {
+        border-left: 3px solid var(--hoover-slate) !important;
+    }
+
+    /* Callouts — keep them visible but printer-friendly. Replace
+       the soft tinted backgrounds with a thin border so the
+       callout structure survives even on B&W output. */
+    .callout {
+        background-color: transparent !important;
+        border: 1px solid var(--hoover-slate) !important;
+        border-left-width: 4px !important;
+    }
+
+    /* Hide elements that don't belong on a printout */
+    .status-bar,
+    .workspace-ribbon,
+    .workspace-tab-header-container {
+        display: none !important;
+    }
+
+    /* Ensure links don't look like dead text on paper */
+    .markdown-rendered a {
+        color: var(--hoover-dark-green) !important;
+        text-decoration: underline !important;
     }
 }

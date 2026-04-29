@@ -7,6 +7,29 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.1.1] — 2026-04-29
+
+### Fixed
+- Table headers now remain legible when printing or exporting to PDF.
+  Previously, white text on a colored background became invisible when
+  printers stripped background colors. Headers now use slate text on a
+  cream background with a green underline, so they read on color and
+  black-and-white printers alike.
+- Dark mode notes now correctly force light-mode colors during print
+  via `print-color-adjust` rules, so any printer engine respects them.
+- Callouts now print with a visible border instead of relying on
+  background tint that some printers strip.
+- Division-scoped notes (`hoover-twp`, `hoover-has`) print with a
+  neutral slate left border instead of orange or blue ink.
+
+### Added
+- Print stylesheet hides workspace chrome (status bar, ribbon, tab
+  headers) so printed output contains only the note content.
+- Links print in dark green underlined text rather than the on-screen
+  accent color.
+
+---
+
 ## [1.1.0] — 2026-04-26
 
 ### Added
